@@ -5,28 +5,7 @@ const { URL } = require('url')
 const BASR_URL = 'http://www.pkuhelper.com'
 const API_URL = 'services/pkuhole/api.php'
 
-class TreeHole {
-  constructor(data, api) {
-    Object.assign(this, data)
-    this.api = api
-    this.comments = null
-  }
-
-  getComment() {
-    if (this.comments) return Promise.resolve(this.comments)
-    return this.api.request({
-      search: {
-        action: 'getcomment',
-        pid: this.pid
-      }
-    }).then((response) => {
-      this.comments = response.data
-      return response.data
-    })
-  }
-}
-
-module.exports = class {
+class Treehole {
   constructor({ timeout = 10000 } = {}) {
     this.timeout = timeout
     this.headers = {}
@@ -82,6 +61,7 @@ module.exports = class {
 
   getList(page = 1) {
     return this.request({
+      url: 'services/pkuhole/api.php',
       search: {
         action: 'getlist',
         p: page
@@ -100,3 +80,5 @@ module.exports = class {
     }).then((response) => new TreeHole(response.data, this))
   }
 }
+
+module.exports = Treehole
